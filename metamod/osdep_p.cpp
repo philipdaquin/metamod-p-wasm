@@ -29,7 +29,7 @@
  *
  */
 
-#ifdef linux
+#if defined(linux) || defined(__linux__) || defined(__EMSCRIPTEN__)
 // enable extra routines in system header files, like dladdr
 #  ifndef _GNU_SOURCE
 #    define _GNU_SOURCE
@@ -96,7 +96,7 @@ void DLLINTERNAL my_closedir(DIR *dir)
 #endif /* _WIN32 */
 
 //get module handle of memptr
-#ifdef linux
+#if defined(linux) || defined(__linux__) || defined(__EMSCRIPTEN__)
 DLHANDLE DLLINTERNAL get_module_handle_of_memptr(void * memptr)
 {
 	Dl_info dli;

@@ -70,8 +70,19 @@ static unsigned char dlsym_new_bytes[BYTES_SIZE];
 //contains original bytes of dlsym
 static unsigned char dlsym_old_bytes[BYTES_SIZE];
 
-//Mutex for our protection
-static pthread_mutex_t mutex_replacement_dlsym = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+// Mutex for our protection. Use runtime initialization so this also works
+// on targets like Emscripten that do not expose the GNU NP initializer.
+static pthread_mutex_t mutex_replacement_dlsym;
+static pthread_once_t mutex_replacement_dlsym_once = PTHREAD_ONCE_INIT;
+
+static void init_mutex_replacement_dlsym(void)
+{
+	pthread_mutexattr_t attr;
+	pthread_mutexattr_init(&attr);
+	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+	pthread_mutex_init(&mutex_replacement_dlsym, &attr);
+	pthread_mutexattr_destroy(&attr);
+}
 
 //constructs new jmp forwarder
 inline void construct_jmp_instruction(void *x, void *place, void* target)
@@ -121,6 +132,8 @@ static void * __replacement_dlsym(void * module, const char * funcname)
 	//do so.
 	static int is_original_restored = 0;
 	int was_original_restored = is_original_restored;
+
+	pthread_once(&mutex_replacement_dlsym_once, init_mutex_replacement_dlsym);
 	
 	//Lock before modifing original dlsym
 	pthread_mutex_lock(&mutex_replacement_dlsym);
