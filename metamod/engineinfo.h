@@ -125,9 +125,8 @@ class EngineInfo : public class_metamod_new
         // Overloaded versions of above test to keep the ugly pointer
         // conversion stuff in here.
         bool DLLINTERNAL is_valid_code_pointer(      const char* (*fp) (edict_t*) );
-        bool DLLINTERNAL is_valid_code_pointer( sequenceEntry_s* (*fp) (const char*, const char*) );
-        bool DLLINTERNAL is_valid_code_pointer( sentenceEntry_s* (*fp) (const char*, int, int*) );
-        bool DLLINTERNAL is_valid_code_pointer(              int (*fp) (char*) );
+        bool DLLINTERNAL is_valid_code_pointer(             void* (*fp) (const char*, const char*) );
+        bool DLLINTERNAL is_valid_code_pointer(             void* (*fp) (const char*, int, int*) );
         bool DLLINTERNAL is_valid_code_pointer(     unsigned int (*fp) (const char*) );
         bool DLLINTERNAL is_valid_code_pointer(              int (*fp) (void) );
         bool DLLINTERNAL is_valid_code_pointer(              int (*fp) (const char*) );
@@ -198,17 +197,12 @@ inline bool EngineInfo::is_valid_code_pointer( const char* (*_fp) (edict_t*) )
     	return is_valid_code_pointer( (void*)_fp );
 }
 
-inline bool EngineInfo::is_valid_code_pointer( sequenceEntry_s* (*_fp) (const char*, const char*) )
+inline bool EngineInfo::is_valid_code_pointer( void* (*_fp) (const char*, const char*) )
 {
     	return is_valid_code_pointer( (void*)_fp );
 }
 
-inline bool EngineInfo::is_valid_code_pointer( sentenceEntry_s* (*_fp) (const char*, int, int*) )
-{
-    	return is_valid_code_pointer( (void*)_fp );
-}
-
-inline bool EngineInfo::is_valid_code_pointer( int (*_fp) (char*) )
+inline bool EngineInfo::is_valid_code_pointer( void* (*_fp) (const char*, int, int*) )
 {
     	return is_valid_code_pointer( (void*)_fp );
 }
@@ -264,4 +258,3 @@ inline bool EngineInfo::is_valid_code_pointer( int (*_fp) (const char*, char**) 
 }
 
 #endif /* MM_ENGINEINFO_H */
-

@@ -413,7 +413,7 @@ char * DLLINTERNAL MPlugin::resolve_suffix(const char *path) {
 
 #ifdef _WIN32
 	safevoid_snprintf(buf, sizeof(buf), "%s.dll", path);
-#elif defined(linux)
+#elif defined(linux) || defined(__linux__) || defined(__EMSCRIPTEN__)
 	safevoid_snprintf(buf, sizeof(buf), "%s.so", path);
 #else
 #error "OS unrecognized"
@@ -421,7 +421,7 @@ char * DLLINTERNAL MPlugin::resolve_suffix(const char *path) {
 	if(stat(buf, &st) == 0 && S_ISREG(st.st_mode))
 		return(buf);
 
-#ifdef linux
+#if defined(linux) || defined(__linux__) || defined(__EMSCRIPTEN__)
 #ifdef __x86_64__
 	safevoid_snprintf(buf, sizeof(buf), "%s_amd64.so", path);
 	if(stat(buf, &st) == 0 && S_ISREG(st.st_mode))
@@ -929,12 +929,12 @@ mBOOL DLLINTERNAL MPlugin::attach(PLUG_LOADTIME now) {
 	iface_vers=ENGINE_INTERFACE_VERSION;
 	GET_FUNC_TABLE_FROM_PLUGIN(pfnGetEngineFunctions, 
 			"GetEngineFunctions", tables.engine, 
-			GET_ENGINE_FUNCTIONS_FN, enginefuncs_t, (sizeof(enginefuncs_t) - sizeof(((enginefuncs_t*)0)->extra_functions)),
+			GET_ENGINE_FUNCTIONS_FN, enginefuncs_t, sizeof(enginefuncs_t),
 			&iface_vers, iface_vers, ENGINE_INTERFACE_VERSION);
 	iface_vers=ENGINE_INTERFACE_VERSION;
 	GET_FUNC_TABLE_FROM_PLUGIN(pfnGetEngineFunctions_Post, 
 			"GetEngineFunctions_Post", post_tables.engine, 
-			GET_ENGINE_FUNCTIONS_FN, enginefuncs_t, (sizeof(enginefuncs_t) - sizeof(((enginefuncs_t*)0)->extra_functions)),
+			GET_ENGINE_FUNCTIONS_FN, enginefuncs_t, sizeof(enginefuncs_t),
 			&iface_vers, iface_vers, ENGINE_INTERFACE_VERSION);
 
 	if(!tables.dllapi && !post_tables.dllapi

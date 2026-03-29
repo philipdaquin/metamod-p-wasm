@@ -91,7 +91,7 @@ const dllapi_info_t dllapi_info = {
 	{ mFALSE,  9,	api_caller_void_args_void,	"CreateInstancedBaselines" },	// pfnCreateInstancedBaselines
 	{ mFALSE,  3,	api_caller_int_args_3p,		"InconsistentFile" },	// pfnInconsistentFile
 	{ mFALSE,  20,	api_caller_int_args_void,	"AllowLagCompensation" },	// pfnAllowLagCompensation
-	{ mFALSE,  0,	NULL, 	NULL },
+	api_info_t(),
 };
 
 const newapi_info_t newapi_info = {
@@ -102,7 +102,7 @@ const newapi_info_t newapi_info = {
 	{ mFALSE,  3,	api_caller_void_args_2p,	"CvarValue" },			// pfnCvarValue
 	// Added 2005/11/21 (no SDK update):
 	{ mFALSE,  3,	api_caller_void_args_pi2p,	"CvarValue2" },			// pfnCvarValue2
-	{ mFALSE,  0,	NULL, 	NULL },
+	api_info_t(),
 };
 
 const engine_info_t engine_info = {
@@ -271,5 +271,5 @@ const engine_info_t engine_info = {
 	// Added 2009-06-17 (no SDK update):
 	{ mFALSE,  8,	api_caller_int_args_2p,		"EngCheckParm" },		// pfnEngCheckParm
 	// end
-	{ mFALSE,  0,   NULL,	NULL },
+	api_info_t(),
 };

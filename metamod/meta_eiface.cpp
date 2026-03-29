@@ -172,13 +172,13 @@ int meta_enginefuncs_t::sm_version = 0;
 
 
 meta_enginefuncs_t::meta_enginefuncs_t(
-	int              (*_pfnPrecacheModel)                   (char*),
-	int              (*_pfnPrecacheSound)                   (char*),
+	int              (*_pfnPrecacheModel)                   (const char*),
+	int              (*_pfnPrecacheSound)                   (const char*),
 	void             (*_pfnSetModel)                        (edict_t*, const char*),
 	int              (*_pfnModelIndex)                      (const char*),
 	int              (*_pfnModelFrames)                     (int),
 	void             (*_pfnSetSize)                         (edict_t*, const float*, const float*),
-	void             (*_pfnChangeLevel)                     (char*, char*),
+	void             (*_pfnChangeLevel)                     (const char*, const char*),
 	void             (*_pfnGetSpawnParms)                   (edict_t*),
 	void             (*_pfnSaveSpawnParms)                  (edict_t*),
 	float            (*_pfnVecToYaw)                        (const float*),
@@ -211,11 +211,11 @@ meta_enginefuncs_t::meta_enginefuncs_t(
 	const char*      (*_pfnTraceTexture)                    (edict_t*, const float*, const float*),
 	void             (*_pfnTraceSphere)                     (const float*, const float*, int, float, edict_t*, TraceResult*),
 	void             (*_pfnGetAimVector)                    (edict_t*, float, float*),
-	void             (*_pfnServerCommand)                   (char*),
+	void             (*_pfnServerCommand)                   (const char*),
 	void             (*_pfnServerExecute)                   (void),
 	void             (*_pfnClientCommand)                   (edict_t*, char*, ...),
 	void             (*_pfnParticleEffect)                  (const float*, const float*, float, float),
-	void             (*_pfnLightStyle)                      (int, char*),
+	void             (*_pfnLightStyle)                      (int, const char*),
 	int	         (*_pfnDecalIndex)                      (const char*),
 	int              (*_pfnPointContents)                   (const float*),
 	void             (*_pfnMessageBegin)                    (int, int, const float*, edict_t*),
@@ -234,8 +234,8 @@ meta_enginefuncs_t::meta_enginefuncs_t(
 	void             (*_pfnCVarSetFloat)                    (const char*, float),
 	void             (*_pfnCVarSetString)                   (const char*, const char*),
 	void             (*_pfnAlertMessage)                    (ALERT_TYPE, char*, ...),
-	void             (*_pfnEngineFprintf)                   (void*, char*, ...),
-	void*            (*_pfnPvAllocEntPrivateData)           (edict_t*, int32),
+	void             (*_pfnEngineFprintf)                   (FILE*, char*, ...),
+	void*            (*_pfnPvAllocEntPrivateData)           (edict_t*, long),
 	void*            (*_pfnPvEntPrivateData)                (edict_t*),
 	void             (*_pfnFreeEntPrivateData)              (edict_t*),
 	const char*      (*_pfnSzFromIndex)                     (int),
@@ -250,8 +250,8 @@ meta_enginefuncs_t::meta_enginefuncs_t(
 	int              (*_pfnRegUserMsg)                      (const char*, int),
 	void             (*_pfnAnimationAutomove)               (const edict_t*, float),
 	void             (*_pfnGetBonePosition)                 (const edict_t*, int, float*, float* ),
-	uint32           (*_pfnFunctionFromName)                (const char*),
-	const char*      (*_pfnNameForFunction)                 (uint32),
+	unsigned long    (*_pfnFunctionFromName)                (const char*),
+	const char*      (*_pfnNameForFunction)                 (unsigned long),
 	void             (*_pfnClientPrintf)                    (edict_t*, PRINT_TYPE, const char*),
 	void             (*_pfnServerPrint)                     (const char*),
 	const char*      (*_pfnCmd_Args)                        (void),
@@ -259,18 +259,18 @@ meta_enginefuncs_t::meta_enginefuncs_t(
 	int	         (*_pfnCmd_Argc)                        (void),
 	void             (*_pfnGetAttachment)                   (const edict_t*, int, float*, float*),
 	void             (*_pfnCRC32_Init)                      (CRC32_t*),
-	void             (*_pfnCRC32_ProcessBuffer)             (CRC32_t*, void*, int),
+	void             (*_pfnCRC32_ProcessBuffer)             (CRC32_t*, const void*, int),
 	void             (*_pfnCRC32_ProcessByte)               (CRC32_t*, unsigned char),
 	CRC32_t          (*_pfnCRC32_Final)                     (CRC32_t),
-	int32            (*_pfnRandomLong)                      (int32,  int32),
+	int              (*_pfnRandomLong)                      (int, int),
 	float            (*_pfnRandomFloat)                     (float, float),
 	void             (*_pfnSetView)                         (const edict_t*, const edict_t*),
 	float            (*_pfnTime)                            (void),
 	void             (*_pfnCrosshairAngle)                  (const edict_t*, float, float),
-	byte*            (*_pfnLoadFileForMe)                   (char*, int*),
+	byte*            (*_pfnLoadFileForMe)                   (const char*, int*),
 	void             (*_pfnFreeFile)                        (void*),
 	void             (*_pfnEndSection)                      (const char*),
-	int              (*_pfnCompareFileTime)                 (char*, char*, int*),
+	int              (*_pfnCompareFileTime)                 (const char*, const char*, int*),
 	void             (*_pfnGetGameDir)                      (char*),
 	void             (*_pfnCvar_RegisterVariable)           (cvar_t*),
 	void             (*_pfnFadeClientVolume)                (const edict_t*, int, int, int, int),
@@ -279,12 +279,12 @@ meta_enginefuncs_t::meta_enginefuncs_t(
 	void             (*_pfnRunPlayerMove)                   (edict_t*, const float*, float, float, float, unsigned short, byte, byte),
 	int              (*_pfnNumberOfEntities)                (void),
 	char*            (*_pfnGetInfoKeyBuffer)                (edict_t*),
-	char*            (*_pfnInfoKeyValue)                    (char*, char*),
+	const char*      (*_pfnInfoKeyValue)                    (const char*, const char*),
 	void             (*_pfnSetKeyValue)                     (char*, char*, char*),
 	void             (*_pfnSetClientKeyValue)               (int, char*, char*, char*),
 	int              (*_pfnIsMapValid)                      (char*),
 	void             (*_pfnStaticDecal)                     (const float*, int, int, int),
-	int              (*_pfnPrecacheGeneric)                 (char*),
+	int              (*_pfnPrecacheGeneric)                 (const char*),
 	int	         (*_pfnGetPlayerUserId)                 (edict_t*),
 	void             (*_pfnBuildSoundMsg)                   (edict_t*, int, const char*, float, float, int, int, int, int, const float*, edict_t*),
 	int              (*_pfnIsDedicatedServer)               (void),
@@ -296,8 +296,8 @@ meta_enginefuncs_t::meta_enginefuncs_t(
 	const char*      (*_pfnGetPhysicsInfoString)            (const edict_t*),
 	unsigned short   (*_pfnPrecacheEvent)                   (int, const char*),
 	void             (*_pfnPlaybackEvent)                   (int, const edict_t*, unsigned short, float, float*, float*, float, float, int, int, int, int),
-	unsigned char*   (*_pfnSetFatPVS)                       (float*),
-	unsigned char*   (*_pfnSetFatPAS)                       (float*),
+	unsigned char*   (*_pfnSetFatPVS)                       (const float*),
+	unsigned char*   (*_pfnSetFatPAS)                       (const float*),
 	int              (*_pfnCheckVisibility)                 (const edict_t*, unsigned char*),
 	void             (*_pfnDeltaSetField)                   (struct delta_s*, const char*),
 	void             (*_pfnDeltaUnsetField)                 (struct delta_s*, const char*),
@@ -309,16 +309,16 @@ meta_enginefuncs_t::meta_enginefuncs_t(
 	void             (*_pfnDeltaUnsetFieldByIndex)          (struct delta_s*, int),
 	void             (*_pfnSetGroupMask)                    (int, int),
 	int              (*_pfnCreateInstancedBaseline)         (int, struct entity_state_s*),
-	void             (*_pfnCvar_DirectSet)                  (struct cvar_s*, char*),
+	void             (*_pfnCvar_DirectSet)                  (struct cvar_s*, const char*),
 	void             (*_pfnForceUnmodified)                 (FORCE_TYPE, float*, float*, const char*),
 	void             (*_pfnGetPlayerStats)                  (const edict_t*, int*, int*),
-	void             (*_pfnAddServerCommand)                (char*, void (*) (void)),
+	void             (*_pfnAddServerCommand)                (const char*, void (*) (void)),
 	qboolean         (*_pfnVoice_GetClientListening)        (int, int),
 	qboolean         (*_pfnVoice_SetClientListening)        (int, int, qboolean),
 	const char*      (*_pfnGetPlayerAuthId)                 (edict_t*),
-	sequenceEntry_s* (*_pfnSequenceGet)                     (const char*, const char*),
-	sentenceEntry_s* (*_pfnSequencePickSentence)            (const char*, int, int*),
-	int              (*_pfnGetFileSize)                     (char*),
+	void*            (*_pfnSequenceGet)                     (const char*, const char*),
+	void*            (*_pfnSequencePickSentence)            (const char*, int, int*),
+	int              (*_pfnGetFileSize)                     (const char*),
 	unsigned int     (*_pfnGetApproxWavePlayLen)            (const char*),
 	int              (*_pfnIsCareerMatch)                   (void),
 	int              (*_pfnGetLocalizedStringLength)        (const char*),
@@ -329,7 +329,7 @@ meta_enginefuncs_t::meta_enginefuncs_t(
 	void             (*_pfnResetTutorMessageDecayData)      (void),
 	void             (*_pfnQueryClientCvarValue)            (const edict_t*, const char*),
 	void             (*_pfnQueryClientCvarValue2)           (const edict_t*, const char*, int),
-	int             (*_pfnEngCheckParm)           		(const char*, char**)
+	int             (*_pfnEngCheckParm)           		(char*, char**)
     )
 {
 	pfnPrecacheModel = _pfnPrecacheModel;
@@ -490,8 +490,6 @@ meta_enginefuncs_t::meta_enginefuncs_t(
 	pfnQueryClientCvarValue = _pfnQueryClientCvarValue;
 	pfnQueryClientCvarValue2 = _pfnQueryClientCvarValue2;
 	pfnEngCheckParm = _pfnEngCheckParm;
-
-	memset( extra_functions, 0, sizeof(extra_functions));
 
 	memset( dummies, 0, sizeof(pdummyfunc) * c_NumDummies ); 
 }
@@ -720,5 +718,3 @@ void HL_enginefuncs_t::fixup_engine_interface( void )
 		pfnEngCheckParm = NULL;
 	}
 }
-
-

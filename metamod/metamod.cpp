@@ -94,7 +94,7 @@ int metamod_not_loaded = 0;
 // Very first metamod function that's run.
 // Do startup operations...
 int DLLINTERNAL metamod_startup(void) {	
-	char *cp, *mmfile=NULL, *cfile=NULL;
+	const char *cp, *mmfile=NULL, *cfile=NULL;
 
 	META_CONS("   ");
 	META_CONS("   %s version %s Copyright (c) 2001-%s %s", VNAME, VVERSION, COPYRIGHT_YEAR, VAUTHOR);
@@ -361,7 +361,11 @@ mBOOL DLLINTERNAL meta_load_gamedll(void) {
 	}
 
 	// open the game DLL
+	#ifdef __EMSCRIPTEN__
+	if(!(GameDLL.handle=dlopen("dlls/cs_emscripten_wasm32.wasm", RTLD_NOW))) {
+	#else
 	if(!(GameDLL.handle=DLOPEN(GameDLL.pathname))) {
+	#endif
 		META_WARNING("dll: Couldn't load game DLL %s: %s", GameDLL.pathname, 
 				DLERROR());
 		RETURN_ERRNO(mFALSE, ME_DLOPEN);

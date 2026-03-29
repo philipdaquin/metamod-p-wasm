@@ -142,7 +142,7 @@ mBOOL DLLINTERNAL setup_gamedll(gamedll_t *gamedll) {
 	if((known=lookup_game(gamedll->name))) {
 #ifdef _WIN32
 		knownfn=known->win_dll;
-#elif defined(linux)
+#elif defined(linux) || defined(__linux__) || defined(__EMSCRIPTEN__)
 		knownfn=known->linux_so;
 	#ifdef __x86_64__
 		//AMD64: convert _i386.so to _amd64.so
@@ -167,7 +167,7 @@ mBOOL DLLINTERNAL setup_gamedll(gamedll_t *gamedll) {
 		
 		// Do this before autodetecting gamedll from "dlls/*.dll"
 		if(!Config->gamedll) {
-#ifdef linux
+#if defined(linux) || defined(__linux__) || defined(__EMSCRIPTEN__)
 			// The engine changed game dll lookup behaviour in that it strips
 			// anything after the last '_' from the name and tries to load the
 			// resulting name. The DSO names were changed and do not have the
@@ -200,8 +200,13 @@ mBOOL DLLINTERNAL setup_gamedll(gamedll_t *gamedll) {
 				// and the pathname member to store the relative name to pass it to the
 				// install_gamedll function to save stack space. They are going
 				// to get overwritten later on, so that's ok.
-				safevoid_snprintf(gamedll->pathname, sizeof(gamedll->pathname), "dlls/%s",
-						  strippedfn);
+	#ifdef __EMSCRIPTEN__
+					safevoid_snprintf(gamedll->pathname, sizeof(gamedll->pathname),
+							  "dlls/cs_emscripten_wasm32.wasm");
+	#else
+					safevoid_snprintf(gamedll->pathname, sizeof(gamedll->pathname), "dlls/%s",
+							  strippedfn);
+	#endif
 				// Check if the gamedll file exists. If not, try to install it from
 				// the cache.
 				mBOOL ok = mTRUE;
@@ -222,7 +227,12 @@ mBOOL DLLINTERNAL setup_gamedll(gamedll_t *gamedll) {
 			// name.
 			if (0 == usedfn) {
 				META_DEBUG(4, ("Checking for old version game DLL name '%s'.\n", knownfn) );
-				safevoid_snprintf(gamedll->pathname, sizeof(gamedll->pathname), "dlls/%s", knownfn);
+	#ifdef __EMSCRIPTEN__
+					safevoid_snprintf(gamedll->pathname, sizeof(gamedll->pathname),
+							  "dlls/cs_emscripten_wasm32.wasm");
+	#else
+					safevoid_snprintf(gamedll->pathname, sizeof(gamedll->pathname), "dlls/%s", knownfn);
+	#endif
 				// Check if the gamedll file exists. If not, try to install it from
 				// the cache.
 				if(!valid_gamedir_file(gamedll->pathname)) {

@@ -53,15 +53,23 @@ typedef enum enum_api_t {
 	e_api_newapi = 2,
 } enum_api_t;
 
-// API caller function prototype
-typedef void * (DLLINTERNAL_NOVIS * api_caller_func_t)(const void * func, const void * packed_args);
+// API caller function prototypes. Void-returning wrappers must remain void
+// on wasm so call_indirect uses the correct signature.
+typedef void (DLLINTERNAL_NOVIS *api_caller_void_func_t)(const void *func, const void *packed_args);
+typedef void * (DLLINTERNAL_NOVIS *api_caller_func_t)(const void *func, const void *packed_args);
 
 
 typedef struct api_info_s {
 	mBOOL trace;			// if true, log info about this function
 	int loglevel;			// level at which to log info about this function
-	api_caller_func_t api_caller;	// argument format/type for single-main-hook-function optimization
+	mBOOL returns_value;		// whether api_caller returns a value
+	const void *api_caller;		// argument format/type for single-main-hook-function optimization
 	const char *name;		// string representation of function name
+	api_info_s() : trace(mFALSE), loglevel(0), returns_value(mFALSE), api_caller(NULL), name(NULL) {}
+	api_info_s(mBOOL t, int l, api_caller_void_func_t c, const char *n)
+		: trace(t), loglevel(l), returns_value(mFALSE), api_caller((const void *)c), name(n) {}
+	api_info_s(mBOOL t, int l, api_caller_func_t c, const char *n)
+		: trace(t), loglevel(l), returns_value(mTRUE), api_caller((const void *)c), name(n) {}
 } api_info_t;
 
 

@@ -292,6 +292,11 @@ int DLLINTERNAL EngineInfo::phdr_dladdr( void* _pMem )
 
 int DLLINTERNAL EngineInfo::phdr_r_debug( void )
 {
+#ifdef __EMSCRIPTEN__
+	// Emscripten does not expose the ELF runtime linker internals used by
+	// the native Linux DT_DEBUG/_DYNAMIC scan.
+	return NOTFOUND;
+#else
 	ElfW(Dyn)* pDyn; 
 	struct r_debug* pr_debug;
 	struct link_map* pMap;
@@ -326,6 +331,7 @@ int DLLINTERNAL EngineInfo::phdr_r_debug( void )
 	}
 
 	return NOTFOUND;
+#endif
 }
 
 void DLLINTERNAL EngineInfo::set_code_range( void* _pBase, ElfW(Phdr)* _pPhdr )
@@ -386,5 +392,4 @@ int DLLINTERNAL EngineInfo::initialise( enginefuncs_t* _pFuncs )
 
 	return 0;
 }
-
 
