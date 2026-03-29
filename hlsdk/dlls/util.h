@@ -70,6 +70,7 @@ typedef int EOFFSET;
 
 // In case it's not alread defined
 typedef int BOOL;
+typedef unsigned long ULONG;
 
 // In case this ever changes
 #define M_PI                    3.14159265358979323846

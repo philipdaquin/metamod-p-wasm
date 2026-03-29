@@ -60,7 +60,9 @@ typedef struct resourceinfo_s
 #define RES_REQUESTED	   (1<<3)	// Already requested a download of this one
 #define RES_PRECACHED	   (1<<4)	// Already precached
 
+#ifndef MM_SKIP_CUSTOM_CRC
 #include "crc.h"
+#endif
 
 typedef struct resource_s
 {
